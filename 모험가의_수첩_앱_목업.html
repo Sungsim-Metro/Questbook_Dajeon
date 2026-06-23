@@ -1,0 +1,209 @@
+
+<style>
+  .phone { width: 200px; background: #1a1a2e; border-radius: 24px; padding: 10px; box-shadow: 0 0 0 2px #333; }
+  .screen { background: #fff; border-radius: 16px; overflow: hidden; height: 380px; position: relative; }
+  .screen.dark { background: #0f172a; }
+  .status-bar { background: #2E5F8A; color: #fff; font-size: 9px; padding: 4px 10px; display: flex; justify-content: space-between; }
+  .nav-bar { background: #2E5F8A; color: #fff; padding: 8px 10px 6px; display: flex; align-items: center; gap: 6px; }
+  .nav-bar .title { font-size: 12px; font-weight: 500; }
+  .nav-bar .badge { background: #f59e0b; color: #7c2d12; font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 8px; margin-left: auto; }
+  .label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-align: center; margin-top: 10px; }
+  .screen-label { font-size: 13px; font-weight: 500; color: var(--color-text-primary); text-align: center; margin-bottom: 6px; }
+  .phones-row { display: flex; gap: 20px; justify-content: center; align-items: flex-start; padding: 1rem 0; }
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; }
+</style>
+
+<div class="phones-row">
+
+  <!-- 화면 1: 지도 퀘스트 -->
+  <div class="phone-wrap">
+    <p class="screen-label">① 퀘스트 지도</p>
+    <div class="phone">
+      <div class="screen">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="nav-bar">
+          <i class="ti ti-map-pin" style="font-size:13px" aria-hidden="true"></i>
+          <span class="title">모험가의 수첩</span>
+          <span class="badge">퀘스트 3</span>
+        </div>
+        <!-- 지도 영역 -->
+        <div style="position:relative; height:220px; background:#e8f4ea; overflow:hidden;">
+          <!-- 도로 -->
+          <div style="position:absolute; top:90px; left:0; right:0; height:6px; background:#d1d5db; opacity:.7;"></div>
+          <div style="position:absolute; top:0; bottom:0; left:95px; width:5px; background:#d1d5db; opacity:.7;"></div>
+          <div style="position:absolute; top:40px; left:110px; right:0; height:4px; background:#d1d5db; opacity:.5;"></div>
+          <!-- 공원 -->
+          <div style="position:absolute; top:30px; left:10px; width:70px; height:50px; background:#86efac; border-radius:6px; opacity:.6;"></div>
+          <div style="position:absolute; top:36px; left:14px; font-size:8px; color:#166534;">한밭수목원</div>
+          <!-- 퀘스트 마커들 -->
+          <div style="position:absolute; top:22px; left:26px;">
+            <div style="width:20px; height:20px; background:#2E5F8A; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:2px solid #fff;"></div>
+            <div style="position:absolute; top:1px; left:4px; transform:rotate(45deg); font-size:9px;">🌿</div>
+          </div>
+          <!-- 과학관 마커 -->
+          <div style="position:absolute; top:50px; left:120px;">
+            <div style="width:20px; height:20px; background:#f59e0b; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:2px solid #fff;"></div>
+            <div style="position:absolute; top:1px; left:4px; transform:rotate(45deg); font-size:9px;">🔭</div>
+          </div>
+          <div style="position:absolute; top:38px; left:108px; font-size:7px; color:#78350f; font-weight:600;">국립과학관</div>
+          <!-- 성심당 마커 -->
+          <div style="position:absolute; top:100px; left:60px;">
+            <div style="width:20px; height:20px; background:#ef4444; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:2px solid #fff;"></div>
+            <div style="position:absolute; top:1px; left:4px; transform:rotate(45deg); font-size:9px;">🍞</div>
+          </div>
+          <div style="position:absolute; top:122px; left:44px; font-size:7px; color:#7f1d1d; font-weight:600;">성심당</div>
+          <!-- 타슈 마커 -->
+          <div style="position:absolute; top:140px; left:130px;">
+            <div style="width:18px; height:18px; background:#8b5cf6; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:2px solid #fff;"></div>
+            <div style="position:absolute; top:1px; left:3px; transform:rotate(45deg); font-size:9px;">🚲</div>
+          </div>
+          <!-- 현재 위치 -->
+          <div style="position:absolute; top:86px; left:88px; width:12px; height:12px; background:#3b82f6; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 4px rgba(59,130,246,.25);"></div>
+          <!-- 범례 -->
+          <div style="position:absolute; bottom:6px; right:6px; background:rgba(255,255,255,.9); border-radius:6px; padding:4px 6px; font-size:7px; line-height:1.7; color:#374151;">
+            <div>● 내 위치</div>
+            <div>📍 진행가능</div>
+            <div style="color:#9ca3af;">📍 완료</div>
+          </div>
+        </div>
+        <!-- 하단 퀘스트 카드 -->
+        <div style="padding:8px 10px; background:#fff;">
+          <div style="font-size:9px; color:#6b7280; margin-bottom:4px;">📍 근처 퀘스트</div>
+          <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:6px 8px; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:14px;">🌿</span>
+            <div style="flex:1;">
+              <div style="font-size:10px; font-weight:600; color:#166534;">한밭수목원 산책하기</div>
+              <div style="font-size:8px; color:#6b7280;">방문형 · 도보 10분 · +50XP</div>
+            </div>
+            <div style="background:#2E5F8A; color:#fff; font-size:8px; padding:3px 7px; border-radius:6px;">시작</div>
+          </div>
+        </div>
+        <!-- 탭바 -->
+        <div style="position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:1px solid #e5e7eb; display:flex; justify-content:space-around; padding:4px 0 2px;">
+          <div style="text-align:center; color:#2E5F8A;"><i class="ti ti-map" style="font-size:14px" aria-hidden="true"></i><div style="font-size:7px; font-weight:600;">지도</div></div>
+          <div style="text-align:center; color:#9ca3af;"><i class="ti ti-list-check" style="font-size:14px" aria-hidden="true"></i><div style="font-size:7px;">퀘스트</div></div>
+          <div style="text-align:center; color:#9ca3af;"><i class="ti ti-book" style="font-size:14px" aria-hidden="true"></i><div style="font-size:7px;">수첩</div></div>
+          <div style="text-align:center; color:#9ca3af;"><i class="ti ti-user" style="font-size:14px" aria-hidden="true"></i><div style="font-size:7px;">MY</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 화면 2: 뱃지 획득 -->
+  <div class="phone-wrap">
+    <p class="screen-label">② 뱃지 획득</p>
+    <div class="phone">
+      <div class="screen">
+        <div class="status-bar"><span>9:48</span><span>●●●</span></div>
+        <div style="background:#2E5F8A; color:#fff; padding:8px 10px 6px; font-size:12px; font-weight:500;">퀘스트 완료!</div>
+        <!-- 완료 팝업 영역 -->
+        <div style="padding:12px 10px; text-align:center;">
+          <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:12px 8px; margin-bottom:8px;">
+            <div style="font-size:8px; color:#166534; font-weight:600; margin-bottom:4px;">✅ 퀘스트 달성</div>
+            <div style="font-size:11px; font-weight:600; color:#14532d; margin-bottom:2px;">한밭수목원 산책하기</div>
+            <div style="font-size:8px; color:#6b7280;">GPS 인증 완료 · 도보 1.2km</div>
+            <div style="font-size:18px; font-weight:700; color:#2E5F8A; margin-top:4px;">+50 XP</div>
+          </div>
+          <!-- 뱃지 획득 -->
+          <div style="font-size:9px; color:#6b7280; margin-bottom:8px; font-weight:600;">🏅 새 뱃지 획득!</div>
+          <div style="display:flex; gap:8px; justify-content:center; margin-bottom:10px;">
+            <div style="text-align:center;">
+              <div style="width:52px; height:52px; background:linear-gradient(135deg,#d1fae5,#6ee7b7); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid #34d399; margin:0 auto 3px;">🌿</div>
+              <div style="font-size:8px; font-weight:600; color:#065f46;">대전 워커</div>
+              <div style="font-size:7px; color:#9ca3af;">도보 탐험가</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="width:52px; height:52px; background:linear-gradient(135deg,#fef3c7,#fcd34d); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid #f59e0b; margin:0 auto 3px;">🍞</div>
+              <div style="font-size:8px; font-weight:600; color:#78350f;">빵지순례자</div>
+              <div style="font-size:7px; color:#9ca3af;">미식 관광객</div>
+            </div>
+          </div>
+          <!-- 수첩 도장 -->
+          <div style="background:#fffbeb; border:1px dashed #fcd34d; border-radius:8px; padding:6px; margin-bottom:8px;">
+            <div style="font-size:8px; color:#92400e; font-weight:600; margin-bottom:4px;">📖 모험 수첩에 기록됨</div>
+            <div style="display:flex; gap:4px; justify-content:center;">
+              <div style="width:28px; height:28px; background:#fde68a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:1.5px solid #f59e0b;">🌿</div>
+              <div style="width:28px; height:28px; background:#fde68a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; border:1.5px solid #f59e0b;">🍞</div>
+              <div style="width:28px; height:28px; background:#e5e7eb; border-radius:50%; border:1.5px dashed #9ca3af;"></div>
+              <div style="width:28px; height:28px; background:#e5e7eb; border-radius:50%; border:1.5px dashed #9ca3af;"></div>
+            </div>
+          </div>
+          <div style="background:#2E5F8A; color:#fff; border-radius:8px; padding:7px; font-size:10px; font-weight:500;">다음 퀘스트 보기 →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 화면 3: 모험 수첩 (가로로 넓게) -->
+<div style="max-width:340px; margin:0 auto;">
+  <p class="screen-label" style="margin-bottom:6px;">③ 나만의 모험 수첩</p>
+  <div style="background:#1a1a2e; border-radius:20px; padding:8px;">
+    <div style="background:#fff; border-radius:14px; overflow:hidden;">
+      <div class="status-bar"><span>10:05</span><span>●●●</span></div>
+      <div class="nav-bar">
+        <i class="ti ti-book" style="font-size:13px" aria-hidden="true"></i>
+        <span class="title">나의 모험 수첩</span>
+        <span style="margin-left:auto; font-size:9px; background:rgba(255,255,255,.2); padding:2px 6px; border-radius:8px;">Lv.3</span>
+      </div>
+      <div style="padding:8px 10px;">
+        <!-- 프로필 요약 -->
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; background:#f8fafc; border-radius:8px; padding:6px 8px;">
+          <div style="width:32px; height:32px; background:#dbeafe; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">🧭</div>
+          <div>
+            <div style="font-size:10px; font-weight:600; color:#1e3a5f;">대전 탐험가</div>
+            <div style="font-size:8px; color:#6b7280;">퀘스트 7완료 · 이동 8.3km</div>
+          </div>
+          <div style="margin-left:auto; text-align:right;">
+            <div style="font-size:14px; font-weight:700; color:#2E5F8A;">320 XP</div>
+            <div style="font-size:7px; color:#9ca3af;">다음 레벨 +180XP</div>
+          </div>
+        </div>
+        <!-- 경험치 바 -->
+        <div style="background:#e5e7eb; border-radius:4px; height:5px; margin-bottom:8px; overflow:hidden;">
+          <div style="background:#2E5F8A; width:64%; height:100%; border-radius:4px;"></div>
+        </div>
+        <!-- 획득 뱃지 -->
+        <div style="font-size:9px; font-weight:600; color:#374151; margin-bottom:5px;">🏅 획득한 뱃지</div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:8px;">
+          <div style="text-align:center; background:#f0fdf4; border-radius:8px; padding:5px 2px;">
+            <div style="font-size:18px;">🌿</div>
+            <div style="font-size:7px; color:#166534; font-weight:600;">대전 워커</div>
+          </div>
+          <div style="text-align:center; background:#fffbeb; border-radius:8px; padding:5px 2px;">
+            <div style="font-size:18px;">🍞</div>
+            <div style="font-size:7px; color:#78350f; font-weight:600;">빵지순례자</div>
+          </div>
+          <div style="text-align:center; background:#eff6ff; border-radius:8px; padding:5px 2px;">
+            <div style="font-size:18px;">🔭</div>
+            <div style="font-size:7px; color:#1e40af; font-weight:600;">사이언스</div>
+          </div>
+          <div style="text-align:center; background:#e5e7eb; border-radius:8px; padding:5px 2px; opacity:.4;">
+            <div style="font-size:18px;">🚲</div>
+            <div style="font-size:7px; color:#6b7280;">타슈라이더</div>
+          </div>
+        </div>
+        <!-- 방문 기록 -->
+        <div style="font-size:9px; font-weight:600; color:#374151; margin-bottom:4px;">📍 방문 기록</div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <div style="display:flex; align-items:center; gap:6px; background:#f9fafb; border-radius:7px; padding:5px 7px;">
+            <span style="font-size:12px;">🌿</span>
+            <div style="flex:1;"><div style="font-size:9px; font-weight:500; color:#111;">한밭수목원 산책</div><div style="font-size:7px; color:#9ca3af;">오늘 09:41 · 도보 1.2km</div></div>
+            <span style="font-size:8px; background:#dcfce7; color:#166534; padding:2px 5px; border-radius:5px;">완료</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; background:#f9fafb; border-radius:7px; padding:5px 7px;">
+            <span style="font-size:12px;">🍞</span>
+            <div style="flex:1;"><div style="font-size:9px; font-weight:500; color:#111;">성심당 빵지순례</div><div style="font-size:7px; color:#9ca3af;">어제 14:20 · 소비 인증</div></div>
+            <span style="font-size:8px; background:#dcfce7; color:#166534; padding:2px 5px; border-radius:5px;">완료</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; background:#f9fafb; border-radius:7px; padding:5px 7px;">
+            <span style="font-size:12px;">🔭</span>
+            <div style="flex:1;"><div style="font-size:9px; font-weight:500; color:#111;">국립중앙과학관 탐방</div><div style="font-size:7px; color:#9ca3af;">어제 11:05 · 사진 인증</div></div>
+            <span style="font-size:8px; background:#dcfce7; color:#166534; padding:2px 5px; border-radius:5px;">완료</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
