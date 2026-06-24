@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- Badge notebook page for the Questbook Daejeon static mobile web app. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모험가의 수첩 | 뱃지</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body data-page="badges">
+  <div class="app-shell">
+    <header class="app-header">
+      <span class="app-mark" data-app-icon>●</span>
+      <div class="app-title-group">
+        <span class="app-eyebrow" data-app-eyebrow>BADGE</span>
+        <strong class="app-title" data-app-title>뱃지 수첩</strong>
+      </div>
+      <span class="level-pill" data-user-level>Lv.3</span>
+    </header>
+
+    <main class="app-main">
+      <section class="badge-hero">
+        <div class="badge-hero-label">NOTE STAMP</div>
+        <div class="featured-badge" data-featured-badge-icon>🌳</div>
+        <div class="badge-hero-title" data-featured-badge-name>초록 탐험가</div>
+        <div class="badge-hero-sub" data-featured-badge-type>자연 관찰</div>
+        <div class="xp-chip" data-featured-badge-xp>+50 XP 적립</div>
+      </section>
+
+      <section>
+        <h1 class="section-title">붙여둔 뱃지</h1>
+        <div class="badge-grid" data-badge-grid></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">모험 수첩 스탬프</h2>
+        <div class="stamp-row" data-stamp-row></div>
+        <p class="data-note">획득하지 않은 뱃지는 잠긴 상태로 표시합니다. 나중에 완료 퀘스트와 배지 발급 API를 연결하면 이 데이터만 교체하면 됩니다.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" data-bottom-nav aria-label="주요 화면 이동"></nav>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+/* Shared component styles for Questbook Daejeon pages. */
+.hero-panel,
+.soft-panel {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(232, 248, 238, .9), rgba(255, 253, 247, .95));
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-panel {
+  padding: 17px 15px;
+}
+
+.soft-panel {
+  padding: 13px;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar,
+.card-icon,
+.badge-symbol,
+.map-badge,
+.note-icon,
+.quest-icon,
+.metric-icon {
+  font-family: system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.status-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.status-name {
+  overflow: hidden;
+  font-size: 21px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-meta {
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--sub);
+  font-size: 16px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-chip,
+.state-chip,
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.xp-chip {
+  padding: 6px 10px 7px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.state-chip {
+  padding: 5px 8px 6px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.type-chip {
+  padding: 5px 8px 6px;
+  background: #fff4d2;
+  color: #725d28;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.progress-caption {
+  display: flex;
+  justify-content: space-between;
+  margin: 13px 2px 7px;
+  color: #7a6a4d;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.progress-bar {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eadfc9;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), var(--green-dark));
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric-card {
+  min-height: 78px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff8e5;
+}
+
+.metric-icon {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.metric-card strong {
+  display: block;
+  overflow: hidden;
+  font-size: 21px;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric-card span:not(.metric-icon) {
+  display: block;
+  margin-top: 4px;
+  color: var(--sub);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.feature-card,
+.quest-card,
+.note-card,
+.badge-card,
+.recommend-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-2);
+  box-shadow: 0 6px 16px rgba(94, 78, 54, .05);
+}
+
+.feature-card {
+  min-height: 122px;
+  padding: 13px 10px;
+}
+
+.feature-card:hover,
+.quest-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 11px 20px rgba(94, 78, 54, .08);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  border-radius: 15px;
+  border: 1px solid rgba(10, 143, 72, .16);
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.feature-card strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.feature-card span:not(.card-icon) {
+  display: block;
+  margin-top: 6px;
+  color: var(--sub);
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.recommend-card,
+.quest-card,
+.note-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+}
+
+.recommend-card {
+  position: relative;
+}
+
+.recommend-card::before {
+  content: '오늘 메모';
+  position: absolute;
+  right: 14px;
+  top: -9px;
+  padding: 3px 8px 4px;
+  border-radius: 999px;
+  background: #f5e9bd;
+  color: #74633e;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.card-copy,
+.quest-copy,
+.note-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.card-title,
+.quest-title,
+.note-title,
+.badge-name {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-sub,
+.quest-sub,
+.note-sub,
+.badge-sub {
+  margin-top: 5px;
+  color: var(--sub);
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.text-button {
+  flex: 0 0 auto;
+  padding: 9px 12px 10px;
+  border-radius: 13px;
+  background: var(--green-dark);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  box-shadow: 0 7px 14px rgba(10, 143, 72, .21);
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.chip-row::-webkit-scrollbar {
+  display: none;
+}
+
+.chip-button {
+  flex: 0 0 auto;
+  padding: 9px 12px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper-2);
+  color: #5f523d;
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.chip-button.is-active {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  color: #fff;
+}
+
+.quest-list,
+.note-list,
+.badge-grid,
+.map-place-list {
+  display: grid;
+  gap: 10px;
+}
+
+.quest-icon,
+.note-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(10, 143, 72, .16);
+  border-radius: 16px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 21px;
+  line-height: 1;
+}
+
+.quest-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.badge-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.badge-card {
+  min-height: 118px;
+  padding: 12px;
+}
+
+.badge-card.is-locked {
+  opacity: .48;
+  filter: grayscale(1);
+}
+
+.badge-symbol,
+.map-badge {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  border: 2px solid rgba(255, 255, 255, .85);
+  background: linear-gradient(145deg, #fffdf7, #e9faef);
+  color: var(--green-dark);
+  box-shadow: 0 8px 18px rgba(45, 58, 50, .1);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.badge-card .badge-symbol {
+  margin-bottom: 8px;
+}
+
+.empty-note {
+  padding: 13px;
+  border: 1px dashed rgba(10, 143, 72, .28);
+  border-radius: 16px;
+  background: rgba(232, 248, 238, .72);
+  color: #4d6b58;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+@media (max-width: 380px) {
+  .quick-grid,
+  .metric-grid,
+  .badge-grid {
+    gap: 8px;
+  }
+
+  .card-title,
+  .quest-title,
+  .note-title,
+  .badge-name {
+    font-size: 18px;
+  }
+
+  .text-button {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}

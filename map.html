@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- Quest map page for the Questbook Daejeon static mobile web app. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모험가의 수첩 | 지도</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body data-page="map">
+  <div class="app-shell">
+    <header class="app-header">
+      <span class="app-mark" data-app-icon>⌖</span>
+      <div class="app-title-group">
+        <span class="app-eyebrow" data-app-eyebrow>MAP</span>
+        <strong class="app-title" data-app-title>탐험 지도</strong>
+      </div>
+      <span class="level-pill" data-user-level>Lv.3</span>
+    </header>
+
+    <main class="app-main">
+      <section class="map-status">
+        <div>
+          <p class="page-kicker">더미 지도</p>
+          <h1 class="page-title">뱃지를 눌러 장소 정보를 확인하세요</h1>
+        </div>
+        <span class="map-provider-pill">Naver Maps 연결 예정</span>
+      </section>
+
+      <section class="map-shell" aria-label="대전 퀘스트 지도">
+        <div class="map-canvas" data-quest-map data-map-provider="mock"></div>
+      </section>
+
+      <section class="map-detail" data-map-detail aria-label="선택한 장소 정보"></section>
+
+      <section aria-label="지도 장소 목록">
+        <h2 class="section-title">지도 데이터셋</h2>
+        <div class="map-place-list" data-map-place-list></div>
+        <p class="data-note">나중에 Naver Maps SDK와 API 키를 연결하면 같은 장소/뱃지 데이터로 실제 지도 마커를 렌더링하도록 `assets/js/map.js`의 경계를 사용합니다.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" data-bottom-nav aria-label="주요 화면 이동"></nav>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/map.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

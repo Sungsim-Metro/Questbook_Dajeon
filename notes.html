@@ -1,0 +1,54 @@
+<!doctype html>
+<!-- Adventure notebook page for the Questbook Daejeon static mobile web app. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모험가의 수첩 | 탐험 노트</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body data-page="notes">
+  <div class="app-shell">
+    <header class="app-header">
+      <span class="app-mark" data-app-icon>▤</span>
+      <div class="app-title-group">
+        <span class="app-eyebrow" data-app-eyebrow>NOTE</span>
+        <strong class="app-title" data-app-title>탐험 노트</strong>
+      </div>
+      <span class="level-pill" data-user-level>Lv.3</span>
+    </header>
+
+    <main class="app-main">
+      <section class="soft-panel">
+        <div class="status-row">
+          <span class="avatar" data-user-avatar>😊</span>
+          <div class="status-copy">
+            <div class="status-name" data-user-name>꼬마 탐험가</div>
+            <div class="status-meta" data-user-summary>퀘스트 7개 · 8.3km</div>
+          </div>
+          <span class="xp-chip" data-user-xp>320XP</span>
+        </div>
+        <div class="progress-caption">
+          <span data-next-level>Lv.4까지</span>
+          <span data-user-progress>64%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" data-user-progress-fill style="width:64%"></div></div>
+      </section>
+
+      <section>
+        <h1 class="section-title">탐험 메모</h1>
+        <div class="note-list" data-note-list></div>
+        <p class="data-note">수첩 화면은 완료한 퀘스트, 방문 장소, 획득 뱃지, 이동 기록을 이미지 카드 공유 기능으로 확장할 수 있습니다.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" data-bottom-nav aria-label="주요 화면 이동"></nav>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

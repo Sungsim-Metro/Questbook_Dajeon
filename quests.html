@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- Quest list page for the Questbook Daejeon static mobile web app. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모험가의 수첩 | 퀘스트</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body data-page="quests">
+  <div class="app-shell">
+    <header class="app-header">
+      <span class="app-mark" data-app-icon>✓</span>
+      <div class="app-title-group">
+        <span class="app-eyebrow" data-app-eyebrow>QUEST</span>
+        <strong class="app-title" data-app-title>퀘스트 목록</strong>
+      </div>
+      <span class="level-pill" data-user-level>Lv.3</span>
+    </header>
+
+    <main class="app-main">
+      <section class="hero-panel">
+        <p class="page-kicker">대전 관광 퀘스트</p>
+        <h1 class="page-title">오늘 수행할 퀘스트를 고르세요</h1>
+        <p class="page-copy">방문형, 이동형, 활동형, 소비형, 테마형 데이터를 먼저 더미로 구성했습니다.</p>
+      </section>
+
+      <section aria-label="퀘스트 유형 필터">
+        <h2 class="section-title">퀘스트 유형</h2>
+        <div class="chip-row" data-quest-filters>
+          <button class="chip-button is-active" type="button" data-filter-value="추천">추천</button>
+          <button class="chip-button" type="button" data-filter-value="방문형">방문</button>
+          <button class="chip-button" type="button" data-filter-value="이동형">이동</button>
+          <button class="chip-button" type="button" data-filter-value="소비형">소비</button>
+          <button class="chip-button" type="button" data-filter-value="테마형">테마</button>
+          <button class="chip-button" type="button" data-filter-value="활동형">활동</button>
+        </div>
+      </section>
+
+      <section aria-label="퀘스트 목록">
+        <h2 class="section-title">퀘스트 카드</h2>
+        <div class="quest-list" data-quest-list></div>
+        <p class="data-note">퀘스트 목록은 한국관광공사 OpenAPI, 지역 상권 DB, 사용자 배지 이력 기반 추천 API로 대체할 수 있도록 배열 렌더링으로 분리했습니다.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" data-bottom-nav aria-label="주요 화면 이동"></nav>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

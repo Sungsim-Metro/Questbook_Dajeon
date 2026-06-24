@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- Home page for the Questbook Daejeon static mobile web app. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>모험가의 수첩 | 홈</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body data-page="home">
+  <div class="app-shell">
+    <header class="app-header">
+      <span class="app-mark" data-app-icon>✦</span>
+      <div class="app-title-group">
+        <span class="app-eyebrow" data-app-eyebrow>QUESTBOOK</span>
+        <strong class="app-title" data-app-title>모험가 홈</strong>
+      </div>
+      <span class="level-pill" data-user-level>Lv.3</span>
+    </header>
+
+    <main class="app-main">
+      <section class="hero-panel">
+        <p class="page-kicker">로그인 완료</p>
+        <h1 class="page-title"><span data-user-name>꼬마 탐험가</span>님의 다음 탐험을 고르세요</h1>
+        <p class="page-copy">대전의 퀘스트 장소, 추천 관광지, 뱃지 기록을 더미 데이터로 먼저 연결했습니다.</p>
+        <div class="soft-panel home-summary-grid">
+          <div class="status-row">
+            <span class="avatar" data-user-avatar>😊</span>
+            <div class="status-copy">
+              <div class="status-name" data-user-name>꼬마 탐험가</div>
+              <div class="status-meta" data-user-summary>퀘스트 7개 · 8.3km</div>
+            </div>
+            <span class="xp-chip" data-user-xp>320XP</span>
+          </div>
+          <div class="progress-caption">
+            <span data-next-level>Lv.4까지</span>
+            <span data-user-progress>64%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" data-user-progress-fill style="width:64%"></div></div>
+        </div>
+      </section>
+
+      <section class="metric-grid home-metrics" aria-label="탐험 상태 요약">
+        <article class="metric-card"><span class="metric-icon">📍</span><strong data-location-name>대전 중앙로</strong><span>현재 위치 후보</span></article>
+        <article class="metric-card"><span class="metric-icon">🏷️</span><strong data-earned-badge-count>3개</strong><span>획득 뱃지</span></article>
+        <article class="metric-card"><span class="metric-icon">🗺️</span><strong data-nearby-quest-count>6개</strong><span>주변 퀘스트</span></article>
+        <article class="metric-card"><span class="metric-icon">🎁</span><strong data-reward-count>1개</strong><span>리워드 후보</span></article>
+      </section>
+
+      <section aria-label="주요 화면 이동">
+        <h2 class="section-title">탐험 메뉴</h2>
+        <div class="quick-grid">
+          <a class="feature-card" href="map.html"><span class="card-icon">🗺️</span><strong>지도</strong><span>퀘스트 장소와 추천 관광지를 확인합니다.</span></a>
+          <a class="feature-card" href="quests.html"><span class="card-icon">✅</span><strong>퀘스트</strong><span>방문형, 이동형, 소비형 퀘스트를 고릅니다.</span></a>
+          <a class="feature-card" href="notes.html"><span class="card-icon">📒</span><strong>수첩</strong><span>완료한 탐험 기록을 모아봅니다.</span></a>
+          <a class="feature-card" href="badges.html"><span class="card-icon">🏷️</span><strong>뱃지</strong><span>획득한 스탬프와 잠긴 배지를 봅니다.</span></a>
+        </div>
+      </section>
+
+      <section class="home-recommend" aria-label="오늘의 추천">
+        <h2 class="section-title">오늘의 추천</h2>
+        <div class="recommend-card" data-home-recommend></div>
+        <p class="data-note">현재 화면은 더미 데이터로 동작합니다. 로그인, GPS, OpenAPI 관광지 DB, 뱃지 시스템은 같은 데이터 경계에 연결하면 됩니다.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" data-bottom-nav aria-label="주요 화면 이동"></nav>
+  </div>
+
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
