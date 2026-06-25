@@ -40,6 +40,110 @@
   white-space: nowrap;
 }
 
+.map-provider-pill.is-ready {
+  background: var(--green-soft);
+  color: var(--green-dark);
+}
+
+.map-provider-pill.is-warning {
+  background: #fff4d2;
+  color: #725d28;
+}
+
+.map-provider-pill.is-error {
+  background: #fbe2db;
+  color: #9b3f2a;
+}
+
+.map-tools {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.map-search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.map-coordinate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.map-field {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.map-field span {
+  color: #5f655d;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.map-field-wide {
+  min-width: 0;
+}
+
+.map-input {
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 10px 10px;
+  border: 1px solid rgba(94, 78, 54, .18);
+  border-radius: 14px;
+  background: var(--paper-2);
+  color: var(--ink);
+  outline: none;
+}
+
+.map-input:focus {
+  border-color: rgba(10, 143, 72, .46);
+  box-shadow: 0 0 0 3px rgba(3, 199, 90, .14);
+}
+
+.map-action-button,
+.map-secondary-button {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 11px 10px;
+  border-radius: 14px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.map-action-button {
+  background: var(--green-dark);
+  color: #fff;
+  box-shadow: 0 7px 14px rgba(10, 143, 72, .18);
+}
+
+.map-secondary-button {
+  border: 1px solid rgba(10, 143, 72, .22);
+  background: #edf8f1;
+  color: var(--green-dark);
+}
+
+.map-action-button:focus-visible,
+.map-secondary-button:focus-visible {
+  outline: 3px solid rgba(3, 199, 90, .34);
+  outline-offset: 2px;
+}
+
+.map-position-status {
+  min-height: 23px;
+  margin: 0;
+  color: #5f655d;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
 .map-shell {
   position: relative;
   overflow: hidden;
@@ -55,11 +159,19 @@
 
 .map-canvas {
   position: relative;
+  width: 100%;
+  height: 400px;
   min-height: 400px;
 }
 
 .map-canvas.is-naver {
+  height: 400px;
   min-height: 400px;
+  background: #eef3ed;
+}
+
+.map-canvas.is-mock {
+  overflow: hidden;
 }
 
 .map-road {
@@ -108,21 +220,58 @@
   transform: rotate(-5deg);
 }
 
-.map-marker.is-selected .map-badge {
+.map-marker.is-selected .map-badge,
+.naver-marker.is-selected .map-badge {
   outline: 4px solid rgba(3, 199, 90, .28);
   transform: translateY(-2px) rotate(-5deg);
 }
 
-.map-marker-label {
+.map-marker-label,
+.naver-marker-label {
   max-width: 118px;
   overflow: hidden;
   padding: 4px 8px 5px;
   border-radius: 999px;
   background: rgba(255, 253, 245, .94);
+  color: var(--ink);
   font-size: 15px;
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+  box-shadow: 0 6px 12px rgba(45, 58, 50, .12);
+}
+
+.naver-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  filter: drop-shadow(0 6px 8px rgba(45, 58, 50, .16));
+}
+
+.naver-marker .map-badge {
+  transform: rotate(-5deg);
+}
+
+.naver-position-marker {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: rgba(10, 143, 72, .18);
+  box-shadow: 0 0 0 8px rgba(3, 199, 90, .16), 0 5px 12px rgba(45, 58, 50, .18);
+}
+
+.naver-position-marker span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green-dark);
 }
 
 .my-location-dot {
@@ -157,7 +306,8 @@
   gap: 9px;
 }
 
-.map-detail-card .type-chip {
+.map-detail-card .type-chip,
+.map-detail-card .state-chip {
   justify-content: flex-start;
   white-space: normal;
 }
@@ -186,6 +336,12 @@
   color: var(--sub);
   font-size: 16px;
   line-height: 1.1;
+}
+
+.map-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
 .map-place-button {
@@ -310,3 +466,16 @@
     justify-self: start;
   }
 }
+
+@media (max-width: 380px) {
+  .map-search-form,
+  .map-coordinate-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-action-button,
+  .map-secondary-button {
+    width: 100%;
+  }
+}
+

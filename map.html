@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Quest map page for the Questbook Daejeon static mobile web app. -->
+<!-- Quest map page for the Questbook Daejeon NAVER Dynamic Map integration. -->
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -23,14 +23,37 @@
     <main class="app-main">
       <section class="map-status">
         <div>
-          <p class="page-kicker">더미 지도</p>
-          <h1 class="page-title">뱃지를 눌러 장소 정보를 확인하세요</h1>
+          <p class="page-kicker">Dynamic Map</p>
+          <h1 class="page-title">현재 위치 주변 퀘스트</h1>
         </div>
-        <span class="map-provider-pill">Naver Maps 연결 예정</span>
+        <span class="map-provider-pill" data-map-provider-status>연결 확인 중</span>
+      </section>
+
+      <section class="map-tools" aria-label="지도 위치 변경">
+        <form class="map-search-form" data-map-search-form>
+          <label class="map-field map-field-wide">
+            <span>주소</span>
+            <input class="map-input" type="search" data-map-address-input placeholder="대전역" autocomplete="street-address" />
+          </label>
+          <button class="map-action-button" type="submit">검색</button>
+        </form>
+        <div class="map-coordinate-grid">
+          <label class="map-field">
+            <span>위도</span>
+            <input class="map-input" type="text" inputmode="decimal" data-map-lat-input placeholder="36.32700" />
+          </label>
+          <label class="map-field">
+            <span>경도</span>
+            <input class="map-input" type="text" inputmode="decimal" data-map-lng-input placeholder="127.42700" />
+          </label>
+          <button class="map-secondary-button" type="button" data-map-coordinate-button>좌표 이동</button>
+          <button class="map-secondary-button" type="button" data-map-current-location>현재 위치</button>
+        </div>
+        <p class="map-position-status" data-map-position-status>현재 위치를 확인하고 있습니다.</p>
       </section>
 
       <section class="map-shell" aria-label="대전 퀘스트 지도">
-        <div class="map-canvas" data-quest-map data-map-provider="mock"></div>
+        <div class="map-canvas" data-quest-map data-map-provider="naver"></div>
       </section>
 
       <section class="map-detail" data-map-detail aria-label="선택한 장소 정보"></section>
@@ -38,7 +61,7 @@
       <section aria-label="지도 장소 목록">
         <h2 class="section-title">지도 데이터셋</h2>
         <div class="map-place-list" data-map-place-list></div>
-        <p class="data-note">나중에 Naver Maps SDK와 API 키를 연결하면 같은 장소/뱃지 데이터로 실제 지도 마커를 렌더링하도록 `assets/js/map.js`의 경계를 사용합니다.</p>
+        <p class="data-note">NAVER Dynamic Map으로 현재 위치와 대전 퀘스트 장소를 함께 표시합니다. Geocoding과 Reverse Geocoding은 서버 프록시를 통해 API Key를 숨긴 상태로 호출합니다.</p>
       </section>
     </main>
 

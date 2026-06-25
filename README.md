@@ -33,3 +33,25 @@ OpenAPI 관광지 데이터를 기반으로 방문형, 이동형, 활동형, 소
 
 일정 퀘스트 달성 또는 특정 테마 뱃지 획득 시 지역상점 할인 쿠폰, 관광기념품, 체험권 등 리워드를 제공한다.
 MVP 단계에서는 뱃지, 수첩 기록 중심으로 운영하고, 이후 대전 지역상점, 전통시장, 지역 축제와 연계해 실질적 보상 체계로 확장한다.
+
+## 로컬 실행 및 네이버 지도 설정
+
+이 프로젝트의 지도 페이지는 NAVER Maps Dynamic Map을 사용한다. 브라우저에는 `NAVER_MAPS_API_KEY_ID`만 전달하고, `NAVER_MAPS_API_KEY`는 로컬 서버의 Geocoding, Reverse Geocoding 프록시에서만 사용한다.
+
+```bash
+cp .env.example .env
+uv run python server.py
+```
+
+`.env`에 다음 값을 입력한 뒤 `http://100.87.116.106:8000/index.html`로 접속한다. 같은 PC에서는 `http://127.0.0.1:8000/`도 사용할 수 있다.
+
+```dotenv
+NAVER_MAPS_API_KEY_ID=your_key_id
+NAVER_MAPS_API_KEY=your_api_key
+QUESTBOOK_HOST=0.0.0.0
+QUESTBOOK_PORT=8000
+QUESTBOOK_PUBLIC_URL=http://100.87.116.106:8000
+```
+
+NAVER Cloud Platform 콘솔에서 Maps 애플리케이션의 Web 서비스 URL 또는 Referer 허용 목록에 Tailscale 주소 `http://100.87.116.106:8000`, 로컬 주소 `http://127.0.0.1:8000`, 배포 도메인을 등록해야 Dynamic Map이 정상 로드된다. 키가 비어 있거나 도메인 설정이 맞지 않으면 지도 페이지는 기존 목업 지도로 fallback된다.
+
