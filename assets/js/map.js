@@ -1,27 +1,27 @@
-/* Dynamic NAVER Maps integration and mock fallback for Questbook Daejeon. */
+/* Questbook Daejeon의 NAVER Dynamic Map 연동과 목업 지도 대체 렌더링을 제공한다. */
 (function attachQuestbookMap(window, document) {
   'use strict';
 
-  // The variable stores the shared mock data namespace.
+  // 변수 의미: 공유 목업 데이터 네임스페이스다.
   const data = window.QuestbookMockData;
-  // The variable stores shared UI helpers.
+  // 변수 의미: 공유 UI 헬퍼 모음이다.
   const ui = window.QuestbookUi;
-  // The variable stores the same-origin Dynamic Map configuration endpoint.
+  // 변수 의미: 같은 출처의 Dynamic Map 설정 엔드포인트다.
   const CONFIG_ENDPOINT = '/api/naver-map/config';
-  // The variable stores the same-origin Geocoding proxy endpoint.
+  // 변수 의미: 같은 출처의 Geocoding 프록시 엔드포인트다.
   const GEOCODE_ENDPOINT = '/api/naver-map/geocode';
-  // The variable stores the same-origin Reverse Geocoding proxy endpoint.
+  // 변수 의미: 같은 출처의 Reverse Geocoding 프록시 엔드포인트다.
   const REVERSE_GEOCODE_ENDPOINT = '/api/naver-map/reverse-geocode';
-  // The variable stores the NAVER Maps JavaScript SDK URL.
+  // 변수 의미: NAVER Maps JavaScript SDK URL이다.
   const NAVER_MAPS_SDK_URL = 'https://oapi.map.naver.com/openapi/v3/maps.js';
-  // The variable stores the default Dynamic Map zoom level.
+  // 변수 의미: Dynamic Map 기본 줌 레벨이다.
   const DEFAULT_ZOOM = 14;
-  // The variable stores the zoom level used after a user selects or searches a location.
+  // 변수 의미: 사용자가 위치를 선택하거나 검색한 뒤 사용할 줌 레벨이다.
   const FOCUSED_ZOOM = 16;
-  // The variable stores the geolocation timeout in milliseconds.
+  // 변수 의미: 브라우저 위치 확인 제한 시간이며 단위는 밀리초다.
   const GEOLOCATION_TIMEOUT_MS = 5000;
 
-  // The variable stores mutable map runtime state.
+  // 변수 의미: 변경 가능한 지도 런타임 상태다.
   const state = {
     activeLocation: null,
     config: null,
@@ -34,10 +34,10 @@
   };
 
   /**
-   * Input: None.
-   * Output: An object containing map page elements.
-   * Role: Centralizes DOM lookups used by the map page.
-   * Example: const elements = getElements();
+   * 입력: 없음.
+   * 출력: 지도 페이지 요소를 담은 객체.
+   * 역할: 지도 페이지에서 사용하는 DOM 조회를 한곳에 모은다.
+   * 호출 예시: const elements = getElements();
    */
   function getElements() {
     return {
@@ -54,23 +54,23 @@
   }
 
   /**
-   * Input: None.
-   * Output: A boolean.
-   * Role: Detects whether the NAVER Maps SDK is available on the page.
-   * Example: if (hasNaverMaps()) renderNaverQuestMap(container, placeId, location);
+   * 입력: 없음.
+   * 출력: 불리언 값.
+   * 역할: 페이지에서 NAVER Maps SDK를 사용할 수 있는지 확인한다.
+   * 호출 예시: if (hasNaverMaps()) renderNaverQuestMap(container, placeId, location);
    */
   function hasNaverMaps() {
     return Boolean(window.naver && window.naver.maps);
   }
 
   /**
-   * Input: A text label and visual status name.
-   * Output: Nothing.
-   * Role: Updates the map provider status pill.
-   * Example: updateProviderStatus('Naver Dynamic Map', 'ready');
+   * 입력: 텍스트 라벨과 시각적 상태 이름.
+   * 출력: 없음.
+   * 역할: 지도 제공자 상태 배지를 갱신한다.
+   * 호출 예시: updateProviderStatus('Naver Dynamic Map', 'ready');
    */
   function updateProviderStatus(text, statusName) {
-    // The variable stores the provider status pill element.
+    // 변수 의미: 지도 제공자 상태 배지 요소다.
     const providerStatus = getElements().providerStatus;
     if (!providerStatus) return;
 
@@ -80,42 +80,42 @@
   }
 
   /**
-   * Input: A status message string.
-   * Output: Nothing.
-   * Role: Updates the readable current coordinate and address status.
-   * Example: updatePositionStatus('대전역 · 36.33264, 127.43472');
+   * 입력: 상태 메시지 문자열.
+   * 출력: 없음.
+   * 역할: 읽기 쉬운 현재 좌표와 주소 상태를 갱신한다.
+   * 호출 예시: updatePositionStatus('대전역 · 36.33264, 127.43472');
    */
   function updatePositionStatus(text) {
-    // The variable stores the position status element.
+    // 변수 의미: 위치 상태 표시 요소다.
     const positionStatus = getElements().positionStatus;
     if (positionStatus) positionStatus.textContent = text;
   }
 
   /**
-   * Input: A badge id string.
-   * Output: A badge object with a safe fallback.
-   * Role: Resolves map marker badge visuals from the shared badge dataset.
-   * Example: const badge = resolveBadge(place.badgeId);
+   * 입력: 배지 ID 문자열.
+   * 출력: 안전한 대체값을 포함한 배지 객체.
+   * 역할: 공유 배지 데이터셋에서 지도 마커용 배지 시각 요소를 찾는다.
+   * 호출 예시: const badge = resolveBadge(place.badgeId);
    */
   function resolveBadge(badgeId) {
     return ui.findBadgeById(badgeId) || { icon: '✦', color: '#0a8f48', name: '더미 배지' };
   }
 
   /**
-   * Input: A place id string.
-   * Output: A quest object or undefined.
-   * Role: Finds the primary quest linked to a map place.
-   * Example: const quest = findQuestByPlaceId(place.id);
+   * 입력: 장소 ID 문자열.
+   * 출력: 퀘스트 객체 또는 undefined.
+   * 역할: 지도 장소에 연결된 대표 퀘스트를 찾는다.
+   * 호출 예시: const quest = findQuestByPlaceId(place.id);
    */
   function findQuestByPlaceId(placeId) {
     return data.quests.find((quest) => quest.placeId === placeId);
   }
 
   /**
-   * Input: Latitude, longitude, name, and source strings.
-   * Output: A normalized location object.
-   * Role: Keeps location state consistent across browser GPS, search, coordinates, and places.
-   * Example: const location = normalizeLocation(36.327, 127.427, '대전 중앙로', 'mock');
+   * 입력: 위도, 경도, 이름, 출처 문자열.
+   * 출력: 정규화된 위치 객체.
+   * 역할: 브라우저 GPS, 검색, 좌표 입력, 장소 선택의 위치 상태를 일관되게 유지한다.
+   * 호출 예시: const location = normalizeLocation(36.327, 127.427, '대전 중앙로', 'mock');
    */
   function normalizeLocation(latitude, longitude, name, source) {
     return {
@@ -127,10 +127,10 @@
   }
 
   /**
-   * Input: None.
-   * Output: A fallback location object.
-   * Role: Uses the existing Daejeon mock location when browser GPS is unavailable.
-   * Example: const location = getFallbackLocation();
+   * 입력: 없음.
+   * 출력: 대체 위치 객체.
+   * 역할: 브라우저 GPS를 사용할 수 없을 때 기존 대전 목업 위치를 사용한다.
+   * 호출 예시: const location = getFallbackLocation();
    */
   function getFallbackLocation() {
     return normalizeLocation(
@@ -142,38 +142,38 @@
   }
 
   /**
-   * Input: A location object.
-   * Output: A display coordinate string.
-   * Role: Formats latitude and longitude for status text.
-   * Example: const label = formatCoordinate(location);
+   * 입력: 위치 객체.
+   * 출력: 화면 표시용 좌표 문자열.
+   * 역할: 상태 텍스트에 사용할 위도와 경도를 포맷한다.
+   * 호출 예시: const label = formatCoordinate(location);
    */
   function formatCoordinate(location) {
     return `${location.latitude.toFixed(5)}, ${location.longitude.toFixed(5)}`;
   }
 
   /**
-   * Input: A location object.
-   * Output: Nothing.
-   * Role: Syncs latitude and longitude form inputs with the active location.
-   * Example: setCoordinateInputs(location);
+   * 입력: 위치 객체.
+   * 출력: 없음.
+   * 역할: 위도와 경도 입력 값을 활성 위치와 동기화한다.
+   * 호출 예시: setCoordinateInputs(location);
    */
   function setCoordinateInputs(location) {
-    // The variable stores map page elements.
+    // 변수 의미: 지도 페이지 요소 모음이다.
     const elements = getElements();
     if (elements.latitudeInput) elements.latitudeInput.value = location.latitude.toFixed(6);
     if (elements.longitudeInput) elements.longitudeInput.value = location.longitude.toFixed(6);
   }
 
   /**
-   * Input: A raw coordinate value and validation metadata.
-   * Output: A validated number.
-   * Role: Parses coordinate text fields before moving the map.
-   * Example: const lat = parseCoordinateInput('36.327', '위도', -90, 90);
+   * 입력: 원본 좌표 값과 검증용 메타데이터.
+   * 출력: 검증된 숫자 값.
+   * 역할: 지도를 이동하기 전에 좌표 텍스트 필드를 파싱한다.
+   * 호출 예시: const lat = parseCoordinateInput('36.327', '위도', -90, 90);
    */
   function parseCoordinateInput(rawValue, label, minimum, maximum) {
-    // The variable stores the trimmed coordinate string.
+    // 변수 의미: 앞뒤 공백을 제거한 좌표 문자열이다.
     const normalizedValue = String(rawValue || '').trim();
-    // The variable stores the parsed numeric coordinate.
+    // 변수 의미: 파싱된 숫자 좌표다.
     const parsedValue = Number(normalizedValue);
     if (!normalizedValue || !Number.isFinite(parsedValue)) {
       throw new Error(`${label} 값을 숫자로 입력하세요.`);
@@ -185,33 +185,33 @@
   }
 
   /**
-   * Input: None.
-   * Output: A location object from coordinate inputs.
-   * Role: Reads user-entered coordinates for manual map movement.
-   * Example: const location = readCoordinateInputs();
+   * 입력: 없음.
+   * 출력: 좌표 입력 값으로 만든 위치 객체.
+   * 역할: 수동 지도 이동에 사용할 사용자 입력 좌표를 읽는다.
+   * 호출 예시: const location = readCoordinateInputs();
    */
   function readCoordinateInputs() {
-    // The variable stores map page elements.
+    // 변수 의미: 지도 페이지 요소 모음이다.
     const elements = getElements();
-    // The variable stores the validated latitude input.
+    // 변수 의미: 검증된 위도 입력 값이다.
     const latitude = parseCoordinateInput(elements.latitudeInput ? elements.latitudeInput.value : '', '위도', -90, 90);
-    // The variable stores the validated longitude input.
+    // 변수 의미: 검증된 경도 입력 값이다.
     const longitude = parseCoordinateInput(elements.longitudeInput ? elements.longitudeInput.value : '', '경도', -180, 180);
     return normalizeLocation(latitude, longitude, '좌표 선택 위치', 'coordinate');
   }
 
   /**
-   * Input: A JSON endpoint and URLSearchParams.
-   * Output: Parsed JSON payload.
-   * Role: Fetches same-origin JSON and converts HTTP failures into user-safe errors.
-   * Example: const payload = await requestJson(GEOCODE_ENDPOINT, params);
+   * 입력: JSON 엔드포인트와 URLSearchParams 객체.
+   * 출력: 파싱된 JSON 페이로드.
+   * 역할: 같은 출처 JSON을 가져오고 HTTP 실패를 사용자에게 안전한 오류로 바꾼다.
+   * 호출 예시: const payload = await requestJson(GEOCODE_ENDPOINT, params);
    */
   async function requestJson(endpoint, params) {
-    // The variable stores the serialized query string.
+    // 변수 의미: 직렬화된 쿼리 문자열이다.
     const queryString = params && params.toString() ? `?${params.toString()}` : '';
-    // The variable stores the JSON HTTP response.
+    // 변수 의미: JSON HTTP 응답 객체다.
     const response = await fetch(`${endpoint}${queryString}`, { headers: { Accept: 'application/json' } });
-    // The variable stores the parsed payload, when the server returns JSON.
+    // 변수 의미: 서버가 JSON을 반환할 때의 파싱된 페이로드다.
     let payload = {};
     try {
       payload = await response.json();
@@ -220,7 +220,7 @@
     }
 
     if (!response.ok) {
-      // The variable stores the most useful error message available to the user.
+      // 변수 의미: 사용자에게 보여줄 수 있는 가장 유용한 오류 메시지다.
       const message = payload.error || `HTTP ${response.status}`;
       throw new Error(message);
     }
@@ -228,40 +228,40 @@
   }
 
   /**
-   * Input: None.
-   * Output: A NAVER map config payload.
-   * Role: Loads public Dynamic Map Key ID while keeping API Key secret on the server.
-   * Example: const config = await loadNaverConfig();
+   * 입력: 없음.
+   * 출력: NAVER 지도 설정 페이로드.
+   * 역할: API Key 비밀 값은 서버에 두고 공개 가능한 Dynamic Map Key ID만 불러온다.
+   * 호출 예시: const config = await loadNaverConfig();
    */
   async function loadNaverConfig() {
-    // The variable stores the fetched map configuration.
+    // 변수 의미: 가져온 지도 설정 값이다.
     const config = await requestJson(CONFIG_ENDPOINT);
     state.config = config;
     return config;
   }
 
   /**
-   * Input: None.
-   * Output: A boolean.
-   * Role: Checks whether Geocoding and Reverse Geocoding proxy routes can call NAVER.
-   * Example: if (hasRestProxy()) await reverseGeocodeLocation(location);
+   * 입력: 없음.
+   * 출력: 불리언 값.
+   * 역할: Geocoding 및 Reverse Geocoding 프록시 라우트가 NAVER를 호출할 수 있는지 확인한다.
+   * 호출 예시: if (hasRestProxy()) await reverseGeocodeLocation(location);
    */
   function hasRestProxy() {
     return Boolean(state.config && state.config.restApiConfigured);
   }
 
   /**
-   * Input: A NAVER Maps API Key ID.
-   * Output: A promise resolved when the SDK is loaded.
-   * Role: Dynamically injects the official NAVER Maps JavaScript SDK script.
-   * Example: await loadNaverMapsSdk(config.keyId);
+   * 입력: NAVER Maps API Key ID.
+   * 출력: SDK 로딩이 끝나면 resolve되는 Promise.
+   * 역할: 공식 NAVER Maps JavaScript SDK 스크립트를 동적으로 삽입한다.
+   * 호출 예시: await loadNaverMapsSdk(config.keyId);
    */
   function loadNaverMapsSdk(keyId) {
     if (hasNaverMaps()) return Promise.resolve();
     if (state.sdkPromise) return state.sdkPromise;
 
     state.sdkPromise = new Promise((resolve, reject) => {
-      // The variable stores the SDK script element.
+      // 변수 의미: SDK 스크립트 요소다.
       const script = document.createElement('script');
       script.src = `${NAVER_MAPS_SDK_URL}?ncpKeyId=${encodeURIComponent(keyId)}&submodules=geocoder`;
       script.async = true;
@@ -283,10 +283,10 @@
   }
 
   /**
-   * Input: None.
-   * Output: A promise resolving to a browser location.
-   * Role: Reads the browser geolocation API with a bounded timeout.
-   * Example: const location = await getBrowserLocation();
+   * 입력: 없음.
+   * 출력: 브라우저 위치로 resolve되는 Promise.
+   * 역할: 제한 시간 안에서 브라우저 geolocation API를 읽는다.
+   * 호출 예시: const location = await getBrowserLocation();
    */
   function getBrowserLocation() {
     return new Promise((resolve, reject) => {
@@ -297,7 +297,7 @@
 
       window.navigator.geolocation.getCurrentPosition(
         (position) => {
-          // The variable stores browser-provided coordinates.
+          // 변수 의미: 브라우저가 제공한 좌표다.
           const coords = position.coords;
           resolve(normalizeLocation(coords.latitude, coords.longitude, '현재 위치', 'browser'));
         },
@@ -308,17 +308,17 @@
   }
 
   /**
-   * Input: None.
-   * Output: A promise resolving to the initial map location.
-   * Role: Prefers browser GPS and falls back to the Daejeon mock location.
-   * Example: const initialLocation = await resolveInitialLocation();
+   * 입력: 없음.
+   * 출력: 초기 지도 위치로 resolve되는 Promise.
+   * 역할: 브라우저 GPS를 우선 사용하고 실패하면 대전 목업 위치로 대체한다.
+   * 호출 예시: const initialLocation = await resolveInitialLocation();
    */
   async function resolveInitialLocation() {
     updatePositionStatus('현재 위치를 확인하고 있습니다.');
     try {
       return await getBrowserLocation();
     } catch (error) {
-      // The variable stores the fallback Daejeon location.
+      // 변수 의미: 대체로 사용할 대전 위치다.
       const fallbackLocation = getFallbackLocation();
       updatePositionStatus(`현재 위치 권한 없음 · ${fallbackLocation.name} · ${formatCoordinate(fallbackLocation)}`);
       return fallbackLocation;
@@ -326,10 +326,10 @@
   }
 
   /**
-   * Input: A map container element.
-   * Output: Nothing.
-   * Role: Draws decorative map roads and areas for the mock map fallback.
-   * Example: renderMockMapBase(canvas);
+   * 입력: 지도 컨테이너 요소.
+   * 출력: 없음.
+   * 역할: 목업 지도 대체 화면에 장식용 도로와 권역을 그린다.
+   * 호출 예시: renderMockMapBase(canvas);
    */
   function renderMockMapBase(container) {
     container.insertAdjacentHTML('beforeend', `
@@ -345,15 +345,15 @@
   }
 
   /**
-   * Input: A place object and a selected place id.
-   * Output: An HTML string for a mock map marker button.
-   * Role: Creates a clickable badge-shaped marker for the mock map.
-   * Example: const marker = renderMockMarker(place, selectedPlaceId);
+   * 입력: 장소 객체와 선택된 장소 ID.
+   * 출력: 목업 지도 마커 버튼 HTML 문자열.
+   * 역할: 목업 지도에서 클릭 가능한 배지 형태 마커를 만든다.
+   * 호출 예시: const marker = renderMockMarker(place, selectedPlaceId);
    */
   function renderMockMarker(place, selectedPlaceId) {
-    // The variable stores the badge linked to the place.
+    // 변수 의미: 장소에 연결된 배지다.
     const badge = resolveBadge(place.badgeId);
-    // The variable stores whether this marker is selected.
+    // 변수 의미: 이 마커가 선택됐는지 여부다.
     const isSelected = place.id === selectedPlaceId;
     return `
       <button class="map-marker${isSelected ? ' is-selected' : ''}" type="button" data-map-place-id="${ui.escapeHtml(place.id)}" style="left:${place.x}%;top:${place.y}%">
@@ -364,10 +364,10 @@
   }
 
   /**
-   * Input: A map container element and a selected place id.
-   * Output: Nothing.
-   * Role: Renders the static mock map and marker buttons.
-   * Example: renderMockQuestMap(container, 'hanbat-arboretum');
+   * 입력: 지도 컨테이너 요소와 선택된 장소 ID.
+   * 출력: 없음.
+   * 역할: 정적 목업 지도와 마커 버튼을 렌더링한다.
+   * 호출 예시: renderMockQuestMap(container, 'hanbat-arboretum');
    */
   function renderMockQuestMap(container, selectedPlaceId) {
     state.isDynamicMapActive = false;
@@ -382,17 +382,17 @@
   }
 
   /**
-   * Input: A place object and a selected place id.
-   * Output: A NAVER Maps marker icon object.
-   * Role: Builds an HTML marker icon for a quest place.
-   * Example: const icon = buildPlaceMarkerIcon(place, selectedPlaceId);
+   * 입력: 장소 객체와 선택된 장소 ID.
+   * 출력: NAVER Maps 마커 아이콘 객체.
+   * 역할: 퀘스트 장소용 HTML 마커 아이콘을 만든다.
+   * 호출 예시: const icon = buildPlaceMarkerIcon(place, selectedPlaceId);
    */
   function buildPlaceMarkerIcon(place, selectedPlaceId) {
-    // The variable stores the badge linked to the place.
+    // 변수 의미: 장소에 연결된 배지다.
     const badge = resolveBadge(place.badgeId);
-    // The variable stores the selected marker class suffix.
+    // 변수 의미: 선택된 마커에 붙일 클래스 접미사다.
     const selectedClass = place.id === selectedPlaceId ? ' is-selected' : '';
-    // The variable stores the marker HTML content rendered by NAVER Maps.
+    // 변수 의미: NAVER Maps가 렌더링할 마커 HTML 내용이다.
     const content = `
       <button class="naver-marker${selectedClass}" type="button" data-map-place-id="${ui.escapeHtml(place.id)}" aria-label="${ui.escapeHtml(place.name)}">
         <span class="map-badge" style="color:${ui.escapeHtml(badge.color)}">${ui.escapeHtml(badge.icon)}</span>
@@ -406,15 +406,15 @@
   }
 
   /**
-   * Input: A location object.
-   * Output: A NAVER Maps marker icon object.
-   * Role: Builds an HTML marker icon for the current or selected location.
-   * Example: const icon = buildPositionMarkerIcon(location);
+   * 입력: 위치 객체.
+   * 출력: NAVER Maps 마커 아이콘 객체.
+   * 역할: 현재 또는 선택 위치용 HTML 마커 아이콘을 만든다.
+   * 호출 예시: const icon = buildPositionMarkerIcon(location);
    */
   function buildPositionMarkerIcon(location) {
-    // The variable stores a compact marker label by location source.
+    // 변수 의미: 위치 출처에 따른 간단한 마커 라벨이다.
     const label = location.source === 'browser' ? '내 위치' : '선택 위치';
-    // The variable stores the marker HTML content rendered by NAVER Maps.
+    // 변수 의미: NAVER Maps가 렌더링할 마커 HTML 내용이다.
     const content = `
       <div class="naver-position-marker" aria-label="${ui.escapeHtml(label)}">
         <span></span>
@@ -427,10 +427,10 @@
   }
 
   /**
-   * Input: None.
-   * Output: Nothing.
-   * Role: Refreshes NAVER marker icons to reflect the selected place.
-   * Example: updateNaverMarkerSelection();
+   * 입력: 없음.
+   * 출력: 없음.
+   * 역할: 선택된 장소가 반영되도록 NAVER 마커 아이콘을 갱신한다.
+   * 호출 예시: updateNaverMarkerSelection();
    */
   function updateNaverMarkerSelection() {
     state.placeMarkers.forEach((entry) => {
@@ -439,15 +439,15 @@
   }
 
   /**
-   * Input: A location object.
-   * Output: Nothing.
-   * Role: Creates or moves the active location marker on the Dynamic Map.
-   * Example: syncPositionMarker(location);
+   * 입력: 위치 객체.
+   * 출력: 없음.
+   * 역할: Dynamic Map에서 활성 위치 마커를 만들거나 이동한다.
+   * 호출 예시: syncPositionMarker(location);
    */
   function syncPositionMarker(location) {
     if (!state.map || !hasNaverMaps()) return;
 
-    // The variable stores the NAVER coordinate for the active location.
+    // 변수 의미: 활성 위치에 해당하는 NAVER 좌표 객체다.
     const position = new window.naver.maps.LatLng(location.latitude, location.longitude);
     if (state.positionMarker) {
       state.positionMarker.setPosition(position);
@@ -464,10 +464,10 @@
   }
 
   /**
-   * Input: A location object, zoom level, and reverse geocoding flag.
-   * Output: A promise that resolves after optional reverse geocoding.
-   * Role: Moves the Dynamic Map and keeps visible coordinate state synchronized.
-   * Example: await moveToLocation(location, FOCUSED_ZOOM, true);
+   * 입력: 위치 객체, 줌 레벨, Reverse Geocoding 실행 여부.
+   * 출력: 선택적 Reverse Geocoding까지 끝난 뒤 resolve되는 Promise.
+   * 역할: Dynamic Map을 이동하고 화면에 보이는 좌표 상태를 동기화한다.
+   * 호출 예시: await moveToLocation(location, FOCUSED_ZOOM, true);
    */
   async function moveToLocation(location, zoom, shouldReverseGeocode) {
     state.activeLocation = location;
@@ -475,7 +475,7 @@
     updatePositionStatus(`${location.name} · ${formatCoordinate(location)}`);
 
     if (state.map && hasNaverMaps()) {
-      // The variable stores the NAVER coordinate for the target location.
+      // 변수 의미: 대상 위치에 해당하는 NAVER 좌표 객체다.
       const position = new window.naver.maps.LatLng(location.latitude, location.longitude);
       state.map.setCenter(position);
       if (zoom) state.map.setZoom(zoom);
@@ -488,48 +488,48 @@
   }
 
   /**
-   * Input: A NAVER Reverse Geocoding result object.
-   * Output: A readable address string.
-   * Role: Converts NAVER reverse geocoding regions and land fields into compact text.
-   * Example: const address = buildAddressFromReverseResult(result);
+   * 입력: NAVER Reverse Geocoding 결과 객체.
+   * 출력: 읽기 쉬운 주소 문자열.
+   * 역할: NAVER Reverse Geocoding의 지역 및 지번 필드를 간단한 텍스트로 변환한다.
+   * 호출 예시: const address = buildAddressFromReverseResult(result);
    */
   function buildAddressFromReverseResult(result) {
     if (!result) return '';
 
-    // The variable stores region metadata from NAVER Reverse Geocoding.
+    // 변수 의미: NAVER Reverse Geocoding에서 받은 지역 메타데이터다.
     const region = result.region || {};
-    // The variable stores land metadata from NAVER Reverse Geocoding.
+    // 변수 의미: NAVER Reverse Geocoding에서 받은 지번 또는 도로명 메타데이터다.
     const land = result.land || {};
-    // The variable stores readable region names.
+    // 변수 의미: 읽기 쉬운 지역명 목록이다.
     const regionNames = ['area1', 'area2', 'area3', 'area4']
       .map((key) => (region[key] ? region[key].name : ''))
       .filter(Boolean);
-    // The variable stores the road or land number suffix.
+    // 변수 의미: 도로명 또는 지번 번호 접미사다.
     const numberSuffix = [land.number1, land.number2].filter(Boolean).join('-');
-    // The variable stores the road or land name suffix.
+    // 변수 의미: 도로명 또는 지번 이름 접미사다.
     const landSuffix = [land.name, numberSuffix].filter(Boolean).join(' ');
     return [...regionNames, landSuffix].filter(Boolean).join(' ');
   }
 
   /**
-   * Input: A NAVER Reverse Geocoding payload.
-   * Output: A readable address string.
-   * Role: Prefers road address results and falls back to the first result.
-   * Example: const address = formatReverseAddress(payload);
+   * 입력: NAVER Reverse Geocoding 페이로드.
+   * 출력: 읽기 쉬운 주소 문자열.
+   * 역할: 도로명 주소 결과를 우선 사용하고 없으면 첫 번째 결과로 대체한다.
+   * 호출 예시: const address = formatReverseAddress(payload);
    */
   function formatReverseAddress(payload) {
-    // The variable stores reverse geocoding result rows.
+    // 변수 의미: Reverse Geocoding 결과 행 목록이다.
     const results = Array.isArray(payload.results) ? payload.results : [];
-    // The variable stores the preferred road address result.
+    // 변수 의미: 우선 사용할 도로명 주소 결과다.
     const roadResult = results.find((result) => result.name === 'roadaddr');
     return buildAddressFromReverseResult(roadResult || results[0]);
   }
 
   /**
-   * Input: A location object.
-   * Output: A promise that resolves after updating address status.
-   * Role: Converts the active coordinate into a readable address through the server proxy.
-   * Example: await reverseGeocodeLocation(location);
+   * 입력: 위치 객체.
+   * 출력: 주소 상태 갱신 뒤 resolve되는 Promise.
+   * 역할: 서버 프록시를 통해 활성 좌표를 읽기 쉬운 주소로 변환한다.
+   * 호출 예시: await reverseGeocodeLocation(location);
    */
   async function reverseGeocodeLocation(location) {
     if (!hasRestProxy()) {
@@ -537,7 +537,7 @@
       return;
     }
 
-    // The variable stores query parameters for Reverse Geocoding.
+    // 변수 의미: Reverse Geocoding용 쿼리 파라미터다.
     const params = new URLSearchParams({
       lat: String(location.latitude),
       lng: String(location.longitude),
@@ -546,11 +546,11 @@
     updatePositionStatus(`주소 확인 중 · ${formatCoordinate(location)}`);
 
     try {
-      // The variable stores the Reverse Geocoding payload.
+      // 변수 의미: Reverse Geocoding 응답 페이로드다.
       const payload = await requestJson(REVERSE_GEOCODE_ENDPOINT, params);
-      // The variable stores the formatted reverse geocoding address.
+      // 변수 의미: 포맷된 Reverse Geocoding 주소다.
       const address = formatReverseAddress(payload);
-      // The variable stores the updated active location.
+      // 변수 의미: 갱신된 활성 위치다.
       const updatedLocation = normalizeLocation(location.latitude, location.longitude, address || location.name, location.source);
       state.activeLocation = updatedLocation;
       updatePositionStatus(`${updatedLocation.name} · ${formatCoordinate(updatedLocation)}`);
@@ -560,13 +560,13 @@
   }
 
   /**
-   * Input: A map container, selected place id, and initial location.
-   * Output: Nothing.
-   * Role: Renders NAVER Dynamic Map, quest markers, and the active location marker.
-   * Example: renderNaverQuestMap(container, 'hanbat-arboretum', initialLocation);
+   * 입력: 지도 컨테이너, 선택된 장소 ID, 초기 위치.
+   * 출력: 없음.
+   * 역할: NAVER Dynamic Map, 퀘스트 마커, 활성 위치 마커를 렌더링한다.
+   * 호출 예시: renderNaverQuestMap(container, 'hanbat-arboretum', initialLocation);
    */
   function renderNaverQuestMap(container, selectedPlaceId, initialLocation) {
-    // The variable stores the NAVER coordinate for the initial map center.
+    // 변수 의미: 초기 지도 중심에 해당하는 NAVER 좌표 객체다.
     const center = new window.naver.maps.LatLng(initialLocation.latitude, initialLocation.longitude);
     state.selectedPlaceId = selectedPlaceId;
     state.isDynamicMapActive = true;
@@ -587,9 +587,9 @@
     });
 
     state.placeMarkers = data.questPlaces.map((place) => {
-      // The variable stores the marker coordinate for a quest place.
+      // 변수 의미: 퀘스트 장소 마커 좌표다.
       const position = new window.naver.maps.LatLng(place.latitude, place.longitude);
-      // The variable stores the NAVER marker for the current quest place.
+      // 변수 의미: 현재 퀘스트 장소의 NAVER 마커다.
       const marker = new window.naver.maps.Marker({
         map: state.map,
         position,
@@ -605,27 +605,27 @@
   }
 
   /**
-   * Input: A place id string.
-   * Output: Nothing.
-   * Role: Renders the selected map place information panel.
-   * Example: showPlaceDetail('hanbat-arboretum');
+   * 입력: 장소 ID 문자열.
+   * 출력: 없음.
+   * 역할: 선택된 지도 장소 정보 패널을 렌더링한다.
+   * 호출 예시: showPlaceDetail('hanbat-arboretum');
    */
   function showPlaceDetail(placeId) {
-    // The variable stores the detail panel element.
+    // 변수 의미: 상세 정보 패널 요소다.
     const detailElement = document.querySelector('[data-map-detail]');
     if (!detailElement) return;
 
-    // The variable stores the selected place or first fallback place.
+    // 변수 의미: 선택된 장소 또는 첫 번째 대체 장소다.
     const place = data.questPlaces.find((item) => item.id === placeId) || data.questPlaces[0];
-    // The variable stores the selected place badge.
+    // 변수 의미: 선택된 장소의 배지다.
     const badge = resolveBadge(place.badgeId);
-    // The variable stores the selected place quest.
+    // 변수 의미: 선택된 장소의 퀘스트다.
     const quest = findQuestByPlaceId(place.id);
-    // The variable stores the selected quest title.
+    // 변수 의미: 선택된 퀘스트 제목이다.
     const questTitle = quest ? quest.title : '연결된 퀘스트 준비 중';
-    // The variable stores the selected quest reward text.
+    // 변수 의미: 선택된 퀘스트 보상 문구다.
     const rewardText = quest ? `+${quest.xp} XP · ${quest.verification}` : '추천 관광지 데이터';
-    // The variable stores the selected place coordinates.
+    // 변수 의미: 선택된 장소의 좌표 문자열이다.
     const coordinateText = `${place.latitude.toFixed(5)}, ${place.longitude.toFixed(5)}`;
 
     detailElement.innerHTML = `
@@ -648,20 +648,20 @@
   }
 
   /**
-   * Input: A selected place id string.
-   * Output: Nothing.
-   * Role: Renders the map place list used to select markers without the map.
-   * Example: renderPlaceList('science-museum');
+   * 입력: 선택된 장소 ID 문자열.
+   * 출력: 없음.
+   * 역할: 지도 없이도 마커를 선택할 수 있는 장소 목록을 렌더링한다.
+   * 호출 예시: renderPlaceList('science-museum');
    */
   function renderPlaceList(selectedPlaceId) {
-    // The variable stores the list container element.
+    // 변수 의미: 목록 컨테이너 요소다.
     const listElement = document.querySelector('[data-map-place-list]');
     if (!listElement) return;
 
     listElement.innerHTML = data.questPlaces.map((place) => {
-      // The variable stores the badge linked to the place.
+      // 변수 의미: 장소에 연결된 배지다.
       const badge = resolveBadge(place.badgeId);
-      // The variable stores whether the list item is selected.
+      // 변수 의미: 목록 항목이 선택됐는지 여부다.
       const isSelected = place.id === selectedPlaceId;
       return `
         <button class="map-place-button${isSelected ? ' is-selected' : ''}" type="button" data-map-place-id="${ui.escapeHtml(place.id)}">
@@ -676,17 +676,17 @@
   }
 
   /**
-   * Input: A selected place id string.
-   * Output: Nothing.
-   * Role: Selects a map place across the map, detail panel, list, and Dynamic Map center.
-   * Example: selectPlace('sungsimdang');
+   * 입력: 선택된 장소 ID 문자열.
+   * 출력: 없음.
+   * 역할: 지도, 상세 패널, 목록, Dynamic Map 중심에서 선택 장소를 동기화한다.
+   * 호출 예시: selectPlace('sungsimdang');
    */
   function selectPlace(placeId) {
-    // The variable stores the selected quest place.
+    // 변수 의미: 선택된 퀘스트 장소다.
     const place = data.questPlaces.find((item) => item.id === placeId) || data.questPlaces[0];
-    // The variable stores the selected place location.
+    // 변수 의미: 선택된 장소의 위치 객체다.
     const location = normalizeLocation(place.latitude, place.longitude, place.name, 'place');
-    // The variable stores the static map canvas.
+    // 변수 의미: 정적 지도 캔버스 요소다.
     const mapCanvas = document.querySelector('[data-quest-map]');
 
     state.selectedPlaceId = place.id;
@@ -705,32 +705,32 @@
   }
 
   /**
-   * Input: A click event object.
-   * Output: Nothing.
-   * Role: Handles marker and place list clicks.
-   * Example: document.addEventListener('click', handleMapClick);
+   * 입력: 클릭 이벤트 객체.
+   * 출력: 없음.
+   * 역할: 마커와 장소 목록 클릭을 처리한다.
+   * 호출 예시: document.addEventListener('click', handleMapClick);
    */
   function handleMapClick(event) {
     if (!(event.target instanceof Element)) return;
 
-    // The variable stores the nearest place selection trigger.
+    // 변수 의미: 가장 가까운 장소 선택 트리거 요소다.
     const trigger = event.target.closest('[data-map-place-id]');
     if (!trigger) return;
     selectPlace(trigger.dataset.mapPlaceId);
   }
 
   /**
-   * Input: A submit event object.
-   * Output: A promise that resolves after address search.
-   * Role: Converts an address into coordinates and moves the map.
-   * Example: form.addEventListener('submit', handleAddressSubmit);
+   * 입력: submit 이벤트 객체.
+   * 출력: 주소 검색 뒤 resolve되는 Promise.
+   * 역할: 주소를 좌표로 변환하고 지도를 이동한다.
+   * 호출 예시: form.addEventListener('submit', handleAddressSubmit);
    */
   async function handleAddressSubmit(event) {
     event.preventDefault();
 
-    // The variable stores map page elements.
+    // 변수 의미: 지도 페이지 요소 모음이다.
     const elements = getElements();
-    // The variable stores the address search query.
+    // 변수 의미: 주소 검색어다.
     const query = elements.addressInput ? elements.addressInput.value.trim() : '';
     if (!query) {
       updatePositionStatus('검색할 주소를 입력하세요.');
@@ -741,7 +741,7 @@
       return;
     }
 
-    // The variable stores Geocoding query parameters.
+    // 변수 의미: Geocoding용 쿼리 파라미터다.
     const params = new URLSearchParams({ query, count: '5', language: 'kor' });
     if (state.activeLocation) {
       params.set('coordinate', `${state.activeLocation.longitude},${state.activeLocation.latitude}`);
@@ -749,28 +749,28 @@
 
     updatePositionStatus('주소를 검색하고 있습니다.');
     try {
-      // The variable stores the NAVER Geocoding payload.
+      // 변수 의미: NAVER Geocoding 응답 페이로드다.
       const payload = await requestJson(GEOCODE_ENDPOINT, params);
-      // The variable stores geocoding address candidates.
+      // 변수 의미: Geocoding 주소 후보 목록이다.
       const addresses = Array.isArray(payload.addresses) ? payload.addresses : [];
       if (!addresses.length) {
         updatePositionStatus('검색 결과가 없습니다.');
         return;
       }
 
-      // The variable stores the first geocoding candidate.
+      // 변수 의미: 첫 번째 Geocoding 후보 결과다.
       const candidate = addresses[0];
-      // The variable stores the candidate latitude.
+      // 변수 의미: 후보 결과의 위도다.
       const latitude = Number(candidate.y);
-      // The variable stores the candidate longitude.
+      // 변수 의미: 후보 결과의 경도다.
       const longitude = Number(candidate.x);
       if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
         throw new Error('Geocoding result has invalid coordinates.');
       }
 
-      // The variable stores the best display address from NAVER Geocoding.
+      // 변수 의미: NAVER Geocoding 결과 중 화면에 표시할 최적 주소다.
       const displayName = candidate.roadAddress || candidate.jibunAddress || candidate.englishAddress || query;
-      // The variable stores the normalized searched location.
+      // 변수 의미: 정규화된 검색 위치 객체다.
       const location = normalizeLocation(latitude, longitude, displayName, 'geocode');
       await moveToLocation(location, FOCUSED_ZOOM, false);
     } catch (error) {
@@ -779,14 +779,14 @@
   }
 
   /**
-   * Input: None.
-   * Output: A promise that resolves after coordinate movement.
-   * Role: Moves the map to user-entered coordinates and optionally reverse geocodes them.
-   * Example: await handleCoordinateMove();
+   * 입력: 없음.
+   * 출력: 좌표 이동 뒤 resolve되는 Promise.
+   * 역할: 사용자가 입력한 좌표로 지도를 이동하고 필요하면 Reverse Geocoding을 실행한다.
+   * 호출 예시: await handleCoordinateMove();
    */
   async function handleCoordinateMove() {
     try {
-      // The variable stores the manually entered coordinate location.
+      // 변수 의미: 사용자가 직접 입력한 좌표 위치 객체다.
       const location = readCoordinateInputs();
       await moveToLocation(location, FOCUSED_ZOOM, hasRestProxy());
     } catch (error) {
@@ -795,19 +795,19 @@
   }
 
   /**
-   * Input: None.
-   * Output: A promise that resolves after browser location movement.
-   * Role: Moves the map to the browser location or the Daejeon fallback.
-   * Example: await handleCurrentLocationRequest();
+   * 입력: 없음.
+   * 출력: 브라우저 위치 이동 뒤 resolve되는 Promise.
+   * 역할: 브라우저 위치 또는 대전 대체 위치로 지도를 이동한다.
+   * 호출 예시: await handleCurrentLocationRequest();
    */
   async function handleCurrentLocationRequest() {
     updatePositionStatus('현재 위치를 확인하고 있습니다.');
     try {
-      // The variable stores the browser-provided location.
+      // 변수 의미: 브라우저가 제공한 위치 객체다.
       const location = await getBrowserLocation();
       await moveToLocation(location, DEFAULT_ZOOM, hasRestProxy());
     } catch (error) {
-      // The variable stores the fallback Daejeon location.
+      // 변수 의미: 대체로 사용할 대전 위치다.
       const fallbackLocation = getFallbackLocation();
       await moveToLocation(fallbackLocation, DEFAULT_ZOOM, false);
       updatePositionStatus(`현재 위치 권한 없음 · ${fallbackLocation.name} · ${formatCoordinate(fallbackLocation)}`);
@@ -815,10 +815,10 @@
   }
 
   /**
-   * Input: Map page element references.
-   * Output: Nothing.
-   * Role: Registers form, coordinate, current location, and marker click handlers.
-   * Example: bindMapControls(getElements());
+   * 입력: 지도 페이지 요소 참조 모음.
+   * 출력: 없음.
+   * 역할: 폼, 좌표, 현재 위치, 마커 클릭 핸들러를 등록한다.
+   * 호출 예시: bindMapControls(getElements());
    */
   function bindMapControls(elements) {
     if (elements.addressForm) elements.addressForm.addEventListener('submit', handleAddressSubmit);
@@ -828,17 +828,17 @@
   }
 
   /**
-   * Input: A map container element and an optional initial place id.
-   * Output: A promise that resolves after the map is rendered.
-   * Role: Renders Dynamic Map when configured and falls back to the mock map otherwise.
-   * Example: await renderQuestMap(document.querySelector('[data-quest-map]'));
+   * 입력: 지도 컨테이너 요소와 선택적 초기 장소 ID.
+   * 출력: 지도 렌더링 뒤 resolve되는 Promise.
+   * 역할: 설정이 있으면 Dynamic Map을 렌더링하고 아니면 목업 지도로 대체한다.
+   * 호출 예시: await renderQuestMap(document.querySelector('[data-quest-map]'));
    */
   async function renderQuestMap(container, initialPlaceId) {
     if (!container) return;
 
-    // The variable stores the first selected place id.
+    // 변수 의미: 처음 선택할 장소 ID다.
     const selectedPlaceId = initialPlaceId || data.questPlaces[0].id;
-    // The variable stores the fallback Daejeon location.
+    // 변수 의미: 대체로 사용할 대전 위치다.
     const fallbackLocation = getFallbackLocation();
     setCoordinateInputs(fallbackLocation);
     showPlaceDetail(selectedPlaceId);
@@ -846,14 +846,14 @@
 
     try {
       updateProviderStatus('연결 확인 중', 'warning');
-      // The variable stores public Dynamic Map configuration.
+      // 변수 의미: 공개 가능한 Dynamic Map 설정 값이다.
       const config = await loadNaverConfig();
       if (!config.dynamicMapConfigured || !config.keyId) {
         throw new Error('NAVER Dynamic Map Key ID is missing.');
       }
 
       await loadNaverMapsSdk(config.keyId);
-      // The variable stores the initial map location.
+      // 변수 의미: 초기 지도 위치 객체다.
       const initialLocation = await resolveInitialLocation();
       renderNaverQuestMap(container, selectedPlaceId, initialLocation);
       await moveToLocation(initialLocation, DEFAULT_ZOOM, hasRestProxy());
@@ -866,19 +866,19 @@
   }
 
   /**
-   * Input: None.
-   * Output: Nothing.
-   * Role: Initializes the map page.
-   * Example: initMapPage();
+   * 입력: 없음.
+   * 출력: 없음.
+   * 역할: 지도 페이지를 초기화한다.
+   * 호출 예시: initMapPage();
    */
   function initMapPage() {
-    // The variable stores map page elements.
+    // 변수 의미: 지도 페이지 요소 모음이다.
     const elements = getElements();
     bindMapControls(elements);
     renderQuestMap(elements.mapCanvas);
   }
 
-  // The variable exposes map helpers to the main page initializer.
+  // 변수 의미: 메인 페이지 초기화 코드에서 사용할 지도 헬퍼를 공개한다.
   window.QuestbookMap = {
     renderQuestMap,
     initMapPage,

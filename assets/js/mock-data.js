@@ -1,8 +1,8 @@
-/* Mock data source for Questbook Daejeon until real login, quest, badge, and map APIs exist. */
+/* 실제 로그인, 퀘스트, 배지, 지도 API가 준비되기 전 사용하는 Questbook Daejeon 목업 데이터 소스다. */
 (function attachQuestbookMockData(window) {
   'use strict';
 
-  // The variable stores the current signed-in mock user.
+  // 변수 의미: 현재 로그인 상태를 대신하는 목업 사용자 데이터다.
   const currentUser = {
     nickname: '꼬마 탐험가',
     avatar: '😊',
@@ -14,7 +14,7 @@
     rewardCount: 1,
   };
 
-  // The variable stores a mock current position before GPS integration.
+  // 변수 의미: GPS 연동 전 현재 위치를 대신하는 목업 데이터다.
   const currentLocation = {
     name: '대전 중앙로',
     latitude: 36.327,
@@ -22,7 +22,7 @@
     source: 'mock',
   };
 
-  // The variable stores reusable badge definitions.
+  // 변수 의미: 여러 화면에서 재사용하는 배지 정의 목록이다.
   const badges = [
     { id: 'green', icon: '🌳', name: '초록 탐험가', type: '자연 관찰', earned: true, xp: 50, color: '#0a8f48', description: '도심 속 녹지를 방문하고 관찰 기록을 남긴 탐험가 배지입니다.' },
     { id: 'science', icon: '🧪', name: '과학 탐험가', type: '과학 문화', earned: true, xp: 80, color: '#70bd88', description: '과학 전시와 체험형 관광지를 탐방한 기록입니다.' },
@@ -32,7 +32,7 @@
     { id: 'view', icon: '💡', name: '전망 수집가', type: '야경 기록', earned: false, xp: 70, color: '#9d91bf', description: '전망 명소와 야간 관광지를 기록하는 배지입니다.' },
   ];
 
-  // The variable stores quest and tourism place records that later map to OpenAPI or internal datasets.
+  // 변수 의미: 향후 OpenAPI 또는 내부 데이터셋에 매핑할 퀘스트 및 관광지 장소 목록이다.
   const questPlaces = [
     { id: 'hanbat-arboretum', badgeId: 'green', name: '한밭수목원', category: '퀘스트 장소', latitude: 36.3671, longitude: 127.3882, x: 18, y: 16, recommended: true, summary: '대전 대표 도심 수목원에서 자연 관찰 노트를 완성합니다.' },
     { id: 'science-museum', badgeId: 'science', name: '국립중앙과학관', category: '퀘스트 장소', latitude: 36.3762, longitude: 127.3745, x: 63, y: 26, recommended: true, summary: '과학 전시를 둘러보고 체험형 탐험 기록을 남깁니다.' },
@@ -42,7 +42,7 @@
     { id: 'bomunsan-observatory', badgeId: 'view', name: '보문산 전망대', category: '추천 관광지', latitude: 36.3016, longitude: 127.4218, x: 74, y: 78, recommended: true, summary: '전망과 야경 기록을 위한 추천 관광지 후보입니다.' },
   ];
 
-  // The variable stores mock quest records linked to places and badges.
+  // 변수 의미: 장소와 배지에 연결된 목업 퀘스트 목록이다.
   const quests = [
     { id: 'hanbat-forest', placeId: 'hanbat-arboretum', badgeId: 'green', title: '한밭수목원 체크인', type: '방문형', distance: '1.2km', xp: 50, status: '추천', verification: '반경 50m GPS 인증', description: '수목원 안에서 오늘의 식물 단서를 기록하고 자연 관찰 스탬프를 받습니다.' },
     { id: 'science-museum', placeId: 'science-museum', badgeId: 'science', title: '중앙과학관 탐방', type: '테마형', distance: '2.6km', xp: 80, status: '진행 가능', verification: '전시 관람 기록', description: '전시관을 둘러본 뒤 과학 키워드 단서를 탐험 노트에 남깁니다.' },
@@ -52,7 +52,7 @@
     { id: 'night-view', placeId: 'bomunsan-observatory', badgeId: 'view', title: '야경 전망대', type: '활동형', distance: '4.4km', xp: 70, status: '잠금 해제 전', verification: '저녁 시간대 방문', description: '보문산 전망대에서 야경 기록을 남기는 추천 관광지 퀘스트입니다.' },
   ];
 
-  // The variable stores mock adventure notebook entries.
+  // 변수 의미: 탐험 노트에 표시할 목업 기록 목록이다.
   const adventureNotes = [
     { id: 'note-hanbat', icon: '🌳', title: '한밭수목원 체크인', time: '오늘 09:41', badge: '완료', summary: '자연 관찰 노트에 초록 탐험가 스탬프가 붙었습니다.' },
     { id: 'note-walk', icon: '🗼', title: '시계탑의 비밀', time: '어제 14:20', badge: '완료', summary: '원도심 걷기 기록과 이동 거리가 추가되었습니다.' },
@@ -60,7 +60,7 @@
     { id: 'note-bakery', icon: '🥐', title: '대전 빵지순례 준비', time: '다음 추천', badge: '대기', summary: '지역 상권 연계 리워드 후보로 저장되었습니다.' },
   ];
 
-  // The variable exposes the mock dataset to every static page.
+  // 변수 의미: 모든 정적 페이지에서 사용할 수 있도록 목업 데이터셋을 공개한다.
   window.QuestbookMockData = {
     currentUser,
     currentLocation,
